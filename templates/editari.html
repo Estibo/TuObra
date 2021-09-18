@@ -1,4 +1,7 @@
-<form action="/" method="POST">
+{% extends "layout.html" %}
+
+{% block content %}
+<form action="/acti/{{item.0}}" method="POST">
     <input type="text" name="idi" placeholder="Codigo del item" value="{{item.1}}">
     <input type="text" name="nombrei" placeholder="Nombre del Proyecto" value="{{item.2}}">
     <input type="text" name="titulo" placeholder="Titulo" value="{{item.3}}">
@@ -8,3 +11,4 @@
         Save
     </button>
 </form>
+{% endblock %}

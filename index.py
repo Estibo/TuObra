@@ -16,6 +16,40 @@ app.secret_key='TuObra'
 @app.route('/')
 def inicio():
     return render_template('inicio.html')
+
+@app.route('/actp/<id>', methods=['POST'])
+def actp(id):
+    if request.method == 'POST':
+        idp=request.form['idp']
+        nombrep=request.form['nombrep']
+        cur=mysql.connection.cursor()
+        cur.execute("""
+            UPDATE proyectos
+            SET idp= %s, nombrep= %s
+            WHERE id=%s
+        """,(idp,nombrep,id))
+        mysql.connection.commit()
+    flash('Proyect updated Successfully')
+    return redirect(url_for('proyectos'))
+
+@app.route('/acti/<id>', methods=['POST'])
+def acti(id):
+    if request.method == 'POST':
+        idi=request.form['idi']
+        nombrei=request.form['nombrei']
+        titulo=request.form['titulo']
+        unidad=request.form['unidad']
+        valoru=request.form['valoru']
+        cur=mysql.connection.cursor()
+        cur.execute("""
+            UPDATE items
+            SET idi= %s, nombrei= %s, titulo=%s, unidad=%s, valoru=%s
+            WHERE id=%s
+        """,(idi,nombrei,titulo,unidad,valoru,id))
+        mysql.connection.commit()
+    flash('Proyect updated Successfully')
+    return redirect(url_for('items'))
+
     
 @app.route('/editari/<id>')
 def editari(id):
