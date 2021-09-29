@@ -50,27 +50,23 @@ def acti(id):
     flash('Proyect updated Successfully')
     return redirect(url_for('items'))
 
-    
-@app.route('/editari/<id>')
-def editari(id):
-    cur=mysql.connection.cursor()
-    cur.execute('SELECT * FROM items WHERE id= %s',[id])
-    data=cur.fetchall()
-    return render_template('editari.html', item=data[0])
-
-@app.route('/editarp/<id>')
-def editarp(id):
-    cur=mysql.connection.cursor()
-    cur.execute("SELECT * FROM `proyectos` WHERE `proyectos`.`id` = %s;", [id])
-    data=cur.fetchall()
-    return render_template('editarp.html', proyecto=data[0])
-    
-@app.route('/eliminari/<idi>')
-def eliminari(idi):
-    cur=mysql.connection.cursor()
-    cur.execute("DELETE FROM `items` WHERE `items`.`id` = %s;", [idi])
-    mysql.connection.commit()
-    return redirect(url_for('items'))
+@app.route('/actu/<id>', methods=['POST'])
+def actu(id):
+    if request.method == 'POST':
+        idu=request.form['idu']
+        nombreu=request.form['nombreu']
+        emailu=request.form['emailu']
+        idp=request.form['idp']
+        nombrep=request.form['nombrep']
+        cur=mysql.connection.cursor()
+        cur.execute("""
+            UPDATE usuarios
+            SET idu= %s, nombreu= %s, emailu=%s, idp=%s, nombrep=%s
+            WHERE id=%s
+        """,(idu,nombreu,emailu,idp,nombrep,id))
+        mysql.connection.commit()
+    flash('User updated Successfully')
+    return redirect(url_for('usuarios'))
 
 @app.route('/eliminarp/<idp>')
 def eliminarp(idp):
@@ -79,12 +75,19 @@ def eliminarp(idp):
     mysql.connection.commit()
     return redirect(url_for('proyectos'))
 
-@app.route('/proyectos')
-def proyectos():
+@app.route('/eliminari/<idi>')
+def eliminari(idi):
     cur=mysql.connection.cursor()
-    cur.execute('SELECT * FROM proyectos')
-    data=cur.fetchall()
-    return render_template('proyectos.html', proyectos=data)
+    cur.execute("DELETE FROM `items` WHERE `items`.`id` = %s;", [idi])
+    mysql.connection.commit()
+    return redirect(url_for('items'))
+
+@app.route('/eliminaru/<idp>')
+def eliminaru(idp):
+    cur=mysql.connection.cursor()
+    cur.execute("DELETE FROM `usuarios` WHERE `usuarios`.`id`= %s;", [idp])
+    mysql.connection.commit()
+    return redirect(url_for('usuarios'))
 
 @app.route('/addp',methods=['POST'])
 def addProyectos():
@@ -111,13 +114,49 @@ def addItems():
         flash('Item added successfully')
         return redirect(url_for('items'))
 
-@app.route('/usuarios')
-def usuarios():
-    return render_template('usuarios.html')
+@app.route('/addu',methods=['POST'])
+def addUsuarios():
+    if request.method == 'POST':
+        idu=request.form['idu']
+        nombreu=request.form['nombreu'] 
+        emailu=request.form['emailu'] 
+        idp=request.form['idp'] 
+        nombrep=request.form['nombrep'] 
+        cur=mysql.connection.cursor()
+        cur.execute('INSERT INTO usuarios (idu, nombreu, emailu, idp, nombrep) VALUES (%s, %s, %s, %s, %s)', (idu, nombreu,emailu,idp,nombrep))
+        mysql.connection.commit()
+        flash('User added successfully')
+        cur.close()
+        return redirect(url_for('usuarios'))
 
-@app.route('/db')
-def db():
-    return render_template('db.html')
+@app.route('/editarp/<id>')
+def editarp(id):
+    cur=mysql.connection.cursor()
+    cur.execute("SELECT * FROM `proyectos` WHERE `proyectos`.`id` = %s;", [id])
+    data=cur.fetchall()
+    return render_template('editarp.html', proyecto=data[0])
+
+@app.route('/editari/<id>')
+def editari(id):
+    cur=mysql.connection.cursor()
+    cur.execute('SELECT * FROM items WHERE id= %s',[id])
+    data=cur.fetchall()
+    return render_template('editari.html', item=data[0])
+
+@app.route('/editaru/<id>')
+def editaru(id):
+    cur=mysql.connection.cursor()
+    cur.execute('SELECT * FROM usuarios WHERE id= %s',[id])
+    data=cur.fetchall()
+    cur.close()
+    return render_template('editaru.html', usuario=data[0])
+
+@app.route('/proyectos')
+def proyectos():
+    cur=mysql.connection.cursor()
+    cur.execute('SELECT * FROM proyectos')
+    data=cur.fetchall()
+    return render_template('proyectos.html', proyectos=data)
 
 @app.route('/items')
 def items():
@@ -126,6 +165,16 @@ def items():
     data=cur.fetchall()
     return render_template('items.html', items=data)
 
+@app.route('/usuarios')
+def usuarios():
+    cur=mysql.connection.cursor()
+    cur.execute('SELECT * FROM usuarios')
+    data=cur.fetchall()
+    return render_template('usuarios.html', usuarios=data)
+
+@app.route('/db')
+def db():
+    return render_template('db.html')
 
 
 if __name__=='__main__':
