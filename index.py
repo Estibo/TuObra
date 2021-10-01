@@ -68,6 +68,27 @@ def actu(id):
     flash('User updated Successfully')
     return redirect(url_for('usuarios'))
 
+@app.route('/editarp/<id>')
+def editarp(id):
+    cur=mysql.connection.cursor()
+    cur.execute("SELECT * FROM `proyectos` WHERE `proyectos`.`id` = %s;", [id])
+    data=cur.fetchall()
+    return render_template('editarp.html', proyecto=data[0])
+
+@app.route('/editari/<id>')
+def editari(id):
+    cur=mysql.connection.cursor()
+    cur.execute('SELECT * FROM items WHERE id= %s',[id])
+    data=cur.fetchall()
+    return render_template('editari.html', item=data[0])
+
+@app.route('/editaru/<id>')
+def editaru(id):
+    cur=mysql.connection.cursor()
+    cur.execute('SELECT * FROM usuarios WHERE id= %s',[id])
+    data=cur.fetchall()
+    return render_template('editaru.html', usuario=data[0])
+
 @app.route('/eliminarp/<idp>')
 def eliminarp(idp):
     cur=mysql.connection.cursor()
@@ -129,27 +150,6 @@ def addUsuarios():
         cur.close()
         return redirect(url_for('usuarios'))
 
-@app.route('/editarp/<id>')
-def editarp(id):
-    cur=mysql.connection.cursor()
-    cur.execute("SELECT * FROM `proyectos` WHERE `proyectos`.`id` = %s;", [id])
-    data=cur.fetchall()
-    return render_template('editarp.html', proyecto=data[0])
-
-@app.route('/editari/<id>')
-def editari(id):
-    cur=mysql.connection.cursor()
-    cur.execute('SELECT * FROM items WHERE id= %s',[id])
-    data=cur.fetchall()
-    return render_template('editari.html', item=data[0])
-
-@app.route('/editaru/<id>')
-def editaru(id):
-    cur=mysql.connection.cursor()
-    cur.execute('SELECT * FROM usuarios WHERE id= %s',[id])
-    data=cur.fetchall()
-    cur.close()
-    return render_template('editaru.html', usuario=data[0])
 
 @app.route('/proyectos')
 def proyectos():
