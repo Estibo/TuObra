@@ -94,6 +94,7 @@ def eliminarp(idp):
     cur=mysql.connection.cursor()
     cur.execute("DELETE FROM `proyectos` WHERE `proyectos`.`id`= %s;", [idp])
     mysql.connection.commit()
+    flash('Proyect deleted successfully')
     return redirect(url_for('proyectos'))
 
 @app.route('/eliminari/<idi>')
@@ -101,6 +102,7 @@ def eliminari(idi):
     cur=mysql.connection.cursor()
     cur.execute("DELETE FROM `items` WHERE `items`.`id` = %s;", [idi])
     mysql.connection.commit()
+    flash('Item deleted successfully')
     return redirect(url_for('items'))
 
 @app.route('/eliminaru/<idp>')
@@ -108,6 +110,7 @@ def eliminaru(idp):
     cur=mysql.connection.cursor()
     cur.execute("DELETE FROM `usuarios` WHERE `usuarios`.`id`= %s;", [idp])
     mysql.connection.commit()
+    flash('User deleted successfully')
     return redirect(url_for('usuarios'))
 
 @app.route('/addp',methods=['POST'])
